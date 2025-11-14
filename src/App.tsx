@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useGetBotQuery, useSendMessageMutation } from "./api/botApi";
 import { Box, Button, TextField } from "@mui/material";
 import WebApp from "@twa-dev/sdk";
+import "./index.scss";
 
 export const App = () => {
   const { data: botInfo, isSuccess } = useGetBotQuery();
@@ -18,7 +19,7 @@ export const App = () => {
   };
   useEffect(() => {
     WebApp.ready();
-  }, [])
+  }, []);
   useEffect(() => {
     if (isSuccess) console.log(botInfo);
   }, [isSuccess, botInfo]);
@@ -34,7 +35,9 @@ export const App = () => {
       }}
     >
       <TextField value={value} onChange={handleChange} />
-      <Button size="large" onClick={handleSend}>Send Message</Button>
+      <Button size="large" onClick={handleSend}>
+        Send Message
+      </Button>
     </Box>
   );
 };
