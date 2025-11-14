@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useGetBotQuery, useSendMessageMutation } from "./api/botApi";
 import { Box, Button, TextField } from "@mui/material";
+import WebApp from "@twa-dev/sdk";
 
 export const App = () => {
   const { data: botInfo, isSuccess } = useGetBotQuery();
@@ -15,6 +16,9 @@ export const App = () => {
     await sendMessage({ chat_id: "412554186", text: value }).unwrap();
     setValue("");
   };
+  useEffect(() => {
+    WebApp.ready();
+  }, [])
   useEffect(() => {
     if (isSuccess) console.log(botInfo);
   }, [isSuccess, botInfo]);
