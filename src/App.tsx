@@ -4,6 +4,12 @@ import { Box, Button, TextField } from "@mui/material";
 import WebApp from "@twa-dev/sdk";
 import "./index.scss";
 import { Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis } from "recharts";
+import { useForm, type SubmitErrorHandler, type SubmitHandler } from "react-hook-form";
+
+interface Inputs {
+  name: string;
+  phone: number;
+}
 
 const barData = [
   {
@@ -26,6 +32,7 @@ const barData = [
 
 export const App = () => {
   const { data: botInfo, isSuccess } = useGetBotQuery();
+  const {register, handleSubmit} = useForm<Inputs>();
   const [isAnimationActive, setIsAnimationActive] = useState(true);
   const [sendMessage] = useSendMessageMutation();
   const [value, setValue] = useState("");
@@ -38,6 +45,12 @@ export const App = () => {
     await sendMessage({ chat_id: "412554186", text: value }).unwrap();
     setValue("");
   };
+  const onSubmit: SubmitHandler<Inputs> = (formData) => {
+    console.log(formData);
+  }
+  const onError: SubmitErrorHandler<Inputs> = (errors) => {
+    if (errors.phone) alert('Invalid phone number!')
+  }
   useEffect(() => {
     WebApp.ready();
     setTimeout(() => {
@@ -70,6 +83,11 @@ export const App = () => {
         <Legend />
         <Bar dataKey='loginCount' fill="#8884d8" isAnimationActive={isAnimationActive} />
       </BarChart>
+      <form onSubmit={handleSubmit(onSubmit, onError)}>
+        <input {...register('name')} placeholder="Type your name" />
+        <input {...register('phone', {pattern: /^\+\d*$/})} type="tel" placeholder="Type your phone number" />
+        <Button type="submit">Log</Button>
+      </form>
     </Box>
   );
 };
